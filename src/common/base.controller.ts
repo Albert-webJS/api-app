@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Response, Router } from "express";
 import { LoggerService } from "../logger";
 import { RouteController } from "./route.interface";
 
@@ -10,6 +10,19 @@ export abstract class BaseController {
 
     get router(): Router {
         return this._router;
+    }
+
+    public send<T>(response: Response, code: number, message: T) {
+        response.type('application/json');
+        return response.status(code).json(message)
+    }
+
+    public ok<T>(response: Response, messaage: T) {
+        return this.send(response, 200, messaage)
+    }
+
+    public created(res: Response) {
+        return res.sendStatus(201)
     }
 
     protected bindRoutes(routes: RouteController[]): void {
