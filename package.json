@@ -1,0 +1,16 @@
+{
+  "name": "api-app",
+  "version": "1.0.0",
+  "description": "api for app",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "app",
+    "api"
+  ],
+  "author": "albert <pivnenko.albert@gmail.com>",
+  "license": "ISC"
+}
