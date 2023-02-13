@@ -1,11 +1,11 @@
+import 'reflect-metadata';
 import { Container, ContainerModule, interfaces } from 'inversify';
+import { ILogger, LoggerService } from './logger';
 import { App } from './app';
 import { ExeptionFilter } from './errors/exeption.filter';
 import { IExeptionFilter } from './errors/exeption.filter.interface';
-import { LoggerService, ILogger } from './logger';
 import { TYPES } from './types';
 import { UserController } from './users';
-import 'reflect-metadata';
 
 interface BootstrapApplication {
 	appContainer: Container;

@@ -1,11 +1,11 @@
+import 'reflect-metadata';
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { BaseController } from '../common';
 import { HttpError } from '../errors/http-error.class';
 import { ILogger } from '../logger';
-import { TYPES } from '../types';
-import 'reflect-metadata';
 import { IUserController } from './users.interfaces';
+import { TYPES } from '../types';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
