@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { NextFunction, Request, Response } from 'express';
+import { UserLoginDto, UserRegisterDto } from './dto';
 import { inject, injectable } from 'inversify';
 import { BaseController } from '../common';
 import { HttpError } from '../errors/http-error.class';
@@ -17,11 +18,15 @@ export class UserController extends BaseController implements IUserController {
 		]);
 	}
 
-	login(request: Request, response: Response, next: NextFunction): void {
+	login(request: Request<{}, {}, UserLoginDto>, response: Response, next: NextFunction): void {
 		next(new HttpError(401, 'auth login', 'login'));
 	}
 
-	register(request: Request, response: Response, next: NextFunction): void {
+	register(
+		request: Request<{}, {}, UserRegisterDto>,
+		response: Response,
+		next: NextFunction,
+	): void {
 		this.ok(response, 'register');
 	}
 }

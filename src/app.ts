@@ -6,6 +6,7 @@ import { ILogger } from './logger';
 import { Server } from 'http';
 import { TYPES } from './types';
 import { UserController } from './users';
+import { json } from 'body-parser';
 
 @injectable()
 export class App {
@@ -21,6 +22,10 @@ export class App {
 		this.port = 8000;
 	}
 
+	private useMiddleware(): void {
+		this.app.use(json());
+	}
+
 	private useRouter(): void {
 		this.app.use('/users', this.userController.router);
 	}
@@ -30,6 +35,7 @@ export class App {
 	}
 
 	public async init(): Promise<void> {
+		this.useMiddleware();
 		this.useRouter();
 		this.useExeptionFilter();
 		this.server = this.app.listen(this.port);
