@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 import { Container, ContainerModule, interfaces } from 'inversify';
 import { ILogger, LoggerService } from './logger';
+import { IUserController, IUserService, UserController, UserService } from './users';
 import { App } from './app';
 import { ExeptionFilter } from './errors/exeption.filter';
 import { IExeptionFilter } from './errors/exeption.filter.interface';
 import { TYPES } from './types';
-import { UserController } from './users';
 
 interface BootstrapApplication {
 	appContainer: Container;
@@ -14,8 +14,9 @@ interface BootstrapApplication {
 
 const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<App>(TYPES.Application).to(App);
-	bind<UserController>(TYPES.UserController).to(UserController);
+	bind<IUserController>(TYPES.UserController).to(UserController);
 	bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
+	bind<IUserService>(TYPES.UserService).to(UserService);
 	bind<ILogger>(TYPES.ILogger).to(LoggerService);
 });
 

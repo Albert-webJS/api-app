@@ -1,5 +1,5 @@
 export class UserRegisterDto {
-	name: string | undefined;
-	email: string | undefined;
-	password: string | undefined;
+	name: string;
+	email: string;
+	password: string;
 }

@@ -7,10 +7,14 @@ import { HttpError } from '../errors/http-error.class';
 import { ILogger } from '../logger';
 import { IUserController } from './users.interfaces';
 import { TYPES } from '../types';
+import { UserService } from './user.service';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
-	constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
+	constructor(
+		@inject(TYPES.ILogger) private loggerService: ILogger,
+		@inject(TYPES.UserService) private userService: UserService,
+	) {
 		super(loggerService);
 		this.bindRoutes([
 			{ path: '/login', method: 'post', func: this.login },
@@ -23,10 +27,14 @@ export class UserController extends BaseController implements IUserController {
 	}
 
 	register(
-		request: Request<{}, {}, UserRegisterDto>,
+		{ body }: Request<{}, {}, UserRegisterDto>,
 		response: Response,
 		next: NextFunction,
 	): void {
-		this.ok(response, 'register');
+		const result = this.userService.createdUser(body);
+		if (!result) {
+			return next(new HttpError(422, 'This user is already registered'));
+		}
+		this.ok(response, result);
 	}
 }
