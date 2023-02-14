@@ -1,8 +1,8 @@
 import 'reflect-metadata';
+import { BaseController, ValidateMiddlewares } from '../common';
 import { NextFunction, Request, Response } from 'express';
 import { UserLoginDto, UserRegisterDto } from './dto';
 import { inject, injectable } from 'inversify';
-import { BaseController } from '../common';
 import { HttpError } from '../errors/http-error.class';
 import { ILogger } from '../logger';
 import { IUserController } from './users.interfaces';
@@ -18,7 +18,12 @@ export class UserController extends BaseController implements IUserController {
 		super(loggerService);
 		this.bindRoutes([
 			{ path: '/login', method: 'post', func: this.login },
-			{ path: '/register', method: 'post', func: this.register },
+			{
+				path: '/register',
+				method: 'post',
+				func: this.register,
+				middleWares: [new ValidateMiddlewares(UserRegisterDto)],
+			},
 		]);
 	}
 
