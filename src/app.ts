@@ -4,6 +4,7 @@ import { inject, injectable } from 'inversify';
 import { IConfigService } from './config';
 import { IExeptionFilter } from './errors';
 import { ILogger } from './logger';
+import { PrismaService } from './database';
 import { Server } from 'http';
 import { TYPES } from './types';
 import { UserController } from './users';
@@ -19,6 +20,7 @@ export class App {
 		@inject(TYPES.UserController) private userController: UserController,
 		@inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
+		@inject(TYPES.PrismaService) private prismaService: PrismaService,
 	) {
 		this.app = express();
 		this.port = 8000;
@@ -40,6 +42,7 @@ export class App {
 		this.useMiddleware();
 		this.useRouter();
 		this.useExeptionFilter();
+		await this.prismaService.connect();
 		this.server = this.app.listen(this.port);
 		this.logger.log(`Server started in http://localhost:${this.port}`);
 	}

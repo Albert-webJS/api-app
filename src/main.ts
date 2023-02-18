@@ -5,7 +5,7 @@ import { ExeptionFilter, IExeptionFilter } from './errors';
 import { ILogger, LoggerService } from './logger';
 import { IUserController, IUserService, UserController, UserService } from './users';
 import { App } from './app';
-
+import { PrismaService } from './database/prisma.service';
 import { TYPES } from './types';
 
 interface BootstrapApplication {
@@ -18,6 +18,7 @@ const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IUserController>(TYPES.UserController).to(UserController);
 	bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
 	bind<IUserService>(TYPES.UserService).to(UserService);
+	bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
 	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
 	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
 });
