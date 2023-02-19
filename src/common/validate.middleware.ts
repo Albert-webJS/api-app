@@ -1,10 +1,7 @@
 import { ClassConstructor, plainToClass } from 'class-transformer';
 import { NextFunction, Request, Response } from 'express';
+import { IMiddleWares } from './middleware.interface';
 import { validate } from 'class-validator';
-
-export interface IMiddleWares {
-	executer(request: Request, response: Response, next: NextFunction): void;
-}
 
 export class ValidateMiddlewares implements IMiddleWares {
 	constructor(private classToValidate: ClassConstructor<object>) {}

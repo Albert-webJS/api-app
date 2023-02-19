@@ -1,6 +1,6 @@
 import { JwtPayload, verify } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
-import { IMiddleWares } from './validate.middleware';
+import { IMiddleWares } from './middleware.interface';
 
 export class AuthMiddleware implements IMiddleWares {
 	constructor(private secret: string) {}
@@ -14,6 +14,8 @@ export class AuthMiddleware implements IMiddleWares {
 					next();
 				}
 			});
+		} else {
+			next();
 		}
 	}
 }

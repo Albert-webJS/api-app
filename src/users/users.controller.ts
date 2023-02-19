@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { BaseController, ValidateMiddlewares } from '../common';
+import { AuthGuard, BaseController, ValidateMiddlewares } from '../common';
 import { NextFunction, Request, Response } from 'express';
 import { UserLoginDto, UserRegisterDto } from './dto';
 import { inject, injectable } from 'inversify';
@@ -41,7 +41,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/info',
 				method: 'get',
 				func: this.info,
-				middleWares: [],
+				middleWares: [new AuthGuard()],
 			},
 		]);
 	}
@@ -71,8 +71,13 @@ export class UserController extends BaseController implements IUserController {
 		this.ok(response, result);
 	}
 
-	info({ user }: Request<{}, {}, UserRegisterDto>, response: Response, next: NextFunction): void {
-		this.ok(response, { email: user });
+	async info(
+		{ user }: Request<{}, {}, UserRegisterDto>,
+		response: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const userInfo = await this.userService.getUserInfo(user);
+		this.ok(response, { email: userInfo?.email, id: userInfo?.id });
 	}
 
 	private singJWT(email: string, privateKey: string): Promise<string> {

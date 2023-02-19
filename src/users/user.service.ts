@@ -10,6 +10,7 @@ import { UserModel } from '@prisma/client';
 export interface IUserService {
 	createdUser(dto: UserRegisterDto): Promise<UserModel | null>;
 	userExistence(dto: UserLoginDto): Promise<boolean>;
+	getUserInfo(email: string): Promise<UserModel | null>;
 }
 
 @injectable()
@@ -39,5 +40,9 @@ export class UserService implements IUserService {
 		}
 		const newUser = new User(existedUser.email, existedUser.name, existedUser.password);
 		return newUser.comparePassword(password);
+	}
+
+	async getUserInfo(email: string): Promise<UserModel | null> {
+		return this.usersRepository.find(email);
 	}
 }

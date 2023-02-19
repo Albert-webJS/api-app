@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { IMiddleWares } from './validate.middleware';
+import { IMiddleWares } from './middleware.interface';
 
 export interface RouteController {
 	path: string;
