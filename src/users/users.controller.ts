@@ -21,7 +21,12 @@ export class UserController extends BaseController implements IUserController {
 	) {
 		super(loggerService);
 		this.bindRoutes([
-			{ path: '/login', method: 'post', func: this.login },
+			{
+				path: '/login',
+				method: 'post',
+				func: this.login,
+				middleWares: [new ValidateMiddlewares(UserLoginDto)],
+			},
 			{
 				path: '/register',
 				method: 'post',
@@ -31,8 +36,16 @@ export class UserController extends BaseController implements IUserController {
 		]);
 	}
 
-	login(request: Request<{}, {}, UserLoginDto>, response: Response, next: NextFunction): void {
-		next(new HttpError(401, 'auth login', 'login'));
+	async login(
+		request: Request<{}, {}, UserLoginDto>,
+		response: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const result = await this.userService.userExistence(request.body);
+		if (!result) {
+			return next(new HttpError(401, 'login error', 'login'));
+		}
+		this.ok(response, {});
 	}
 
 	register(
