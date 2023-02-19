@@ -8,7 +8,7 @@ import { User } from './user.entity';
 import { UserModel } from '@prisma/client';
 
 export interface IUserService {
-	createdUser(dto: UserRegisterDto): Promise<UserModel | null>;
+	createUser(dto: UserRegisterDto): Promise<UserModel | null>;
 	userExistence(dto: UserLoginDto): Promise<boolean>;
 	getUserInfo(email: string): Promise<UserModel | null>;
 }
@@ -19,7 +19,7 @@ export class UserService implements IUserService {
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.UsersRepository) private usersRepository: IUsersRepository,
 	) {}
-	async createdUser(dto: UserRegisterDto): Promise<UserModel | null> {
+	async createUser(dto: UserRegisterDto): Promise<UserModel | null> {
 		if (!dto) return null;
 
 		const { name, email, password } = dto;
