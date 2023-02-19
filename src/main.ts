@@ -3,7 +3,14 @@ import { ConfigService, IConfigService } from './config';
 import { Container, ContainerModule, interfaces } from 'inversify';
 import { ExeptionFilter, IExeptionFilter } from './errors';
 import { ILogger, LoggerService } from './logger';
-import { IUserController, IUserService, UserController, UserService } from './users';
+import {
+	IUserController,
+	IUserService,
+	IUsersRepository,
+	UserController,
+	UserService,
+	UsersRepository,
+} from './users';
 import { App } from './app';
 import { PrismaService } from './database/prisma.service';
 import { TYPES } from './types';
@@ -21,6 +28,7 @@ const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
 	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
 	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
+	bind<IUsersRepository>(TYPES.UsersRepository).to(UsersRepository).inSingletonScope();
 });
 
 const bootstrapApplication = (): BootstrapApplication => {

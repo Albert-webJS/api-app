@@ -5,9 +5,13 @@ import { UserLoginDto, UserRegisterDto } from './dto';
 import { inject, injectable } from 'inversify';
 import { HttpError } from '../errors/http-error.class';
 import { ILogger } from '../logger';
-import { IUserController } from './users.interfaces';
 import { TYPES } from '../types';
 import { UserService } from './user.service';
+
+export interface IUserController {
+	login(request: Request, response: Response, next: NextFunction): void;
+	register(request: Request, response: Response, next: NextFunction): void;
+}
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
