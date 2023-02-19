@@ -13,6 +13,7 @@ import { sign } from 'jsonwebtoken';
 export interface IUserController {
 	login(request: Request, response: Response, next: NextFunction): void;
 	register(request: Request, response: Response, next: NextFunction): void;
+	info(request: Request, response: Response, next: NextFunction): void;
 }
 
 @injectable()
@@ -35,6 +36,12 @@ export class UserController extends BaseController implements IUserController {
 				method: 'post',
 				func: this.register,
 				middleWares: [new ValidateMiddlewares(UserRegisterDto)],
+			},
+			{
+				path: '/info',
+				method: 'get',
+				func: this.info,
+				middleWares: [],
 			},
 		]);
 	}
@@ -62,6 +69,10 @@ export class UserController extends BaseController implements IUserController {
 			return next(new HttpError(422, 'This user is already registered'));
 		}
 		this.ok(response, result);
+	}
+
+	info({ user }: Request<{}, {}, UserRegisterDto>, response: Response, next: NextFunction): void {
+		this.ok(response, { email: user });
 	}
 
 	private singJWT(email: string, privateKey: string): Promise<string> {

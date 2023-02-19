@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import express, { Express } from 'express';
 import { inject, injectable } from 'inversify';
+import { AuthMiddleware } from './common';
 import { IConfigService } from './config';
 import { IExeptionFilter } from './errors';
 import { ILogger } from './logger';
@@ -28,6 +29,8 @@ export class App {
 
 	private useMiddleware(): void {
 		this.app.use(json());
+		const authMiddleware = new AuthMiddleware(this.configService.get('SECRET'));
+		this.app.use(authMiddleware.executer.bind(authMiddleware));
 	}
 
 	private useRouter(): void {
