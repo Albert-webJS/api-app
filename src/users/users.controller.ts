@@ -4,9 +4,11 @@ import { NextFunction, Request, Response } from 'express';
 import { UserLoginDto, UserRegisterDto } from './dto';
 import { inject, injectable } from 'inversify';
 import { HttpError } from '../errors/http-error.class';
+import { IConfigService } from '../config';
 import { ILogger } from '../logger';
+import { IUserService } from './user.service';
 import { TYPES } from '../types';
-import { UserService } from './user.service';
+import { sign } from 'jsonwebtoken';
 
 export interface IUserController {
 	login(request: Request, response: Response, next: NextFunction): void;
@@ -17,7 +19,8 @@ export interface IUserController {
 export class UserController extends BaseController implements IUserController {
 	constructor(
 		@inject(TYPES.ILogger) private loggerService: ILogger,
-		@inject(TYPES.UserService) private userService: UserService,
+		@inject(TYPES.UserService) private userService: IUserService,
+		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
 		this.bindRoutes([
@@ -45,7 +48,8 @@ export class UserController extends BaseController implements IUserController {
 		if (!result) {
 			return next(new HttpError(401, 'login error', 'login'));
 		}
-		this.ok(response, {});
+		const jwt = await this.singJWT(request.body.email, this.configService.get('SECRET'));
+		this.ok(response, { jwt });
 	}
 
 	register(
@@ -58,5 +62,24 @@ export class UserController extends BaseController implements IUserController {
 			return next(new HttpError(422, 'This user is already registered'));
 		}
 		this.ok(response, result);
+	}
+
+	private singJWT(email: string, privateKey: string): Promise<string> {
+		return new Promise((resolve, reject) => {
+			sign(
+				{
+					email,
+					iat: Math.floor(Date.now() / 1000),
+				},
+				privateKey,
+				{ algorithm: 'HS256' },
+				(error, token) => {
+					if (!token) reject(error);
+					else {
+						resolve(token as string);
+					}
+				},
+			);
+		});
 	}
 }
