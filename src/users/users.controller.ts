@@ -64,7 +64,7 @@ export class UserController extends BaseController implements IUserController {
 		response: Response,
 		next: NextFunction,
 	): void {
-		const result = this.userService.createdUser(body);
+		const result = this.userService.createUser(body);
 		if (!result) {
 			return next(new HttpError(422, 'This user is already registered'));
 		}
